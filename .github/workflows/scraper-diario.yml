@@ -5,11 +5,6 @@ on:
     - cron: '0 3 * * *'
   workflow_dispatch:
 
-# 🔥 Esto obliga a GitHub a posicionarse dentro de la carpeta real de tu proyecto
-defaults:
-  run:
-    working-directory: proyecto.larevueltita2
-
 jobs:
   run-scraper:
     runs-on: ubuntu-latest
@@ -22,12 +17,20 @@ jobs:
         with:
           node-version: 20
 
+      # 🔥 Este comando busca automáticamente la carpeta y ejecuta la instalación ahí adentro
       - name: Instalar dependencias
-        run: npm install
+        run: |
+          TARGET_DIR=$(find . -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \;)
+          cd "$TARGET_DIR"
+          npm install
 
+      # 🔥 Este comando busca el bot e inyecta las credenciales de Supabase y Google
       - name: Ejecutar Bot de IA
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: node bot_ia.mjs
+        run: |
+          TARGET_DIR=$(find . -name "bot_ia.mjs" -not -path "*/node_modules/*" -exec dirname {} \;)
+          cd "$TARGET_DIR"
+          node bot_ia.mjs
