@@ -17,12 +17,14 @@ jobs:
         with:
           node-version: 20
 
-      # 🔥 Eliminamos los "cd", corremos directo en la raíz limpia
+      # Indicar la subcarpeta de forma nativa para la instalación
       - name: Instalar dependencias
+        working-directory: proyecto.larevueltita2
         run: npm install
 
-      # 🔥 Corremos directo el bot inyectando las contraseñas
+      # Indicar la subcarpeta de forma nativa para la ejecución
       - name: Ejecutar Bot de IA
+        working-directory: proyecto.larevueltita2
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
