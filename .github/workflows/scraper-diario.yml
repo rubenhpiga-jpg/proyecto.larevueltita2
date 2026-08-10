@@ -17,16 +17,19 @@ jobs:
         with:
           node-version: 20
 
-      # Indicar la subcarpeta de forma nativa para la instalación
+      # Busca automáticamente dónde está el package.json y lo instala ahí adentro
       - name: Instalar dependencias
-        working-directory: proyecto.larevueltita2
-        run: npm install
+        run: |
+          TARGET_DIR=$(find . -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \;)
+          echo "Carpeta encontrada: $TARGET_DIR"
+          cd "$TARGET_DIR" && npm install
 
-      # Indicar la subcarpeta de forma nativa para la ejecución
+      # Busca dónde está tu archivo del bot y lo ejecuta inyectando las claves secretas
       - name: Ejecutar Bot de IA
-        working-directory: proyecto.larevueltita2
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: node bot_ia.mjs
+        run: |
+          TARGET_DIR=$(find . -name "bot_ia.mjs" -not -path "*/node_modules/*" -exec dirname {} \;)
+          cd "$TARGET_DIR" && node bot_ia.mjs
