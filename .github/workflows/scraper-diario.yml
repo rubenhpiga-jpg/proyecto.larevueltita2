@@ -17,14 +17,14 @@ jobs:
         with:
           node-version: 20
 
-      # 🔥 Entramos e instalamos todo en una sola línea unificada usando &&
+      # 🔥 Eliminamos los "cd", corremos directo en la raíz limpia
       - name: Instalar dependencias
-        run: cd proyecto.larevueltita2 && npm install
+        run: npm install
 
-      # 🔥 Entramos y ejecutamos el bot en una sola línea unificada usando &&
+      # 🔥 Corremos directo el bot inyectando las contraseñas
       - name: Ejecutar Bot de IA
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: cd proyecto.larevueltita2 && node bot_ia.mjs
+        run: node bot_ia.mjs
