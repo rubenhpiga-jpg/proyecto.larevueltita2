@@ -17,20 +17,14 @@ jobs:
         with:
           node-version: 20
 
-      # 🔥 Este comando busca automáticamente la carpeta y ejecuta la instalación ahí adentro
+      # 🔥 Entramos e instalamos todo en una sola línea unificada usando &&
       - name: Instalar dependencias
-        run: |
-          TARGET_DIR=$(find . -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \;)
-          cd "$TARGET_DIR"
-          npm install
+        run: cd proyecto.larevueltita2 && npm install
 
-      # 🔥 Este comando busca el bot e inyecta las credenciales de Supabase y Google
+      # 🔥 Entramos y ejecutamos el bot en una sola línea unificada usando &&
       - name: Ejecutar Bot de IA
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          TARGET_DIR=$(find . -name "bot_ia.mjs" -not -path "*/node_modules/*" -exec dirname {} \;)
-          cd "$TARGET_DIR"
-          node bot_ia.mjs
+        run: cd proyecto.larevueltita2 && node bot_ia.mjs
